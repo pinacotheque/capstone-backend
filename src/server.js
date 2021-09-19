@@ -7,7 +7,10 @@ import {
     notFoundErrorHandler,
 } from "./errorHandlers.js";
 import mongoose from 'mongoose'
+
+
 import usersRouter from '../src/services/users/index.js'
+import TeamsRouter from '../src/services/teams/index.js'
 
 
 const server = express();
@@ -27,6 +30,8 @@ server.use("/blogs", blogsRouter)
 server.use("/auth", authRouter)
 */
 server.use("/users", usersRouter);
+server.use("/teams", TeamsRouter);
+
 
 server.use(badRequestErrorHandler)
 server.use(notFoundErrorHandler)
