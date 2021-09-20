@@ -19,12 +19,12 @@ TeamsRouter.post("/", JWTMiddleware, async (req, res, next) => {
         if (error.name === "ValidationError") {
             next(createError(400, error));
         } else {
-            next(createError(500, "An error occurred while saving Teams"));
+            next(createError(500, "An error occurred while saving team"));
         }
     }
 });
 
-//**************** GET ALL TeamS **************** 
+//**************** GET ALL TEAMS **************** 
 
 TeamsRouter.get("/", JWTMiddleware, async (req, res, next) => {
     try {
@@ -32,11 +32,11 @@ TeamsRouter.get("/", JWTMiddleware, async (req, res, next) => {
         res.send(Team);
     } catch (error) {
         console.log(error);
-        next(createError(500, "An error occurred while getting Teams"));
+        next(createError(500, "An error occurred while getting team"));
     }
 });
 
-//**************** GET SPECIFIC Team **************** 
+//**************** GET ONE Team **************** 
 
 TeamsRouter.get("/:id", JWTMiddleware, async (req, res, next) => {
     try {
@@ -45,72 +45,48 @@ TeamsRouter.get("/:id", JWTMiddleware, async (req, res, next) => {
         if (Team) {
             res.send(Team);
         } else {
-            next(createError(404, `Team ${req.params.id} not found`));
+            next(createError(404, `Team ${req.params.id} not found!`));
         }
     } catch (error) {
         console.log(error);
-        next(createError(500, "An error occurred while getting Team"));
+        next(createError(500, "An error occurred while getting team"));
     }
 });
 
-//**************** EDIT SPECIFIC Team **************** 
+//**************** EDIT Team **************** 
 
 TeamsRouter.put("/:id", JWTMiddleware, async (req, res, next) => {
     try {
         const accomId = req.params.id
-        const modifiedAccommodation = await Team.findOneAndUpdate({ _id: accomId, user: { _id: req.user._id } }, req.body, { new: true, runValidators: true })
-        if (modifiedAccommodation) {
-            res.send(modifiedAccommodation)
+        const modifiedTeam = await Team.findOneAndUpdate({ _id: accomId, user: { _id: req.user._id } }, req.body, { new: true, runValidators: true })
+        if (modifiedTeam) {
+            res.send(modifiedTeam)
         } else {
-            next(createError(404, 'Accommodation not found! OR You are NOT Authorized!'))
+            next(createError(404, 'Team not found!'))
         }
     } catch (error) {
         console.log(error);
         next(createError(500, "An error occurred while modifying Team"))
     }
 
-    // try {
-    // 	const Team = await Team.findByIdAndUpdate(req.params.id, req.body, {
-    // 		runValidators: true,
-    // 		new: true,
-    // 	});
-    // 	if (Team) {
-    // 		res.send(Team);
-    // 	} else {
-    // 		next(createError(404, `Team ${req.params.id} not found`));
-    // 	}
-    // } catch (error) {
-    // 	console.log(error);
-    // 	next(createError(500, "An error occurred while modifying Team"));
-    // }
 });
 
-//**************** DELETE SPECIFIC Team **************** 
+//**************** DELETE Team **************** 
 
 TeamsRouter.delete("/:id", JWTMiddleware, async (req, res, next) => {
     try {
         const accomId = req.params.id
-        const deletedAccommodation = await Team.findOneAndDelete({ _id: accomId, user: { _id: req.user._id } })
-        if (deletedAccommodation) {
+        const deletedTeam = await Team.findOneAndDelete({ _id: accomId, user: { _id: req.user._id } })
+        if (deletedTeam) {
             res.status(204).send()
         } else {
-            next(createError(404, 'Accommodation not found! OR You are NOT Authorized!'))
+            next(createError(404, 'Team not found or not authorized!'))
         }
     } catch (error) {
         console.log(error);
-        next(createError(500, "An error occurred while deleting Team"))
+        next(createError(500, "An error occurred while deleting team"))
     }
-    // try {
-    // 	const Team = await Team.findByIdAndDelete(req.params.id).populate("user");
-    // 	if (Team) {
-    // 		res.status(204).send();
-    // 	} else {
-    // 		next(createError(404, `Team ${req.params.id} not found`));
-    // 	}
-    // } catch (error) {
-    // 	console.log(error);
-    // 	next(createError(500, "An error occurred while deleting Team"));
-    // }
+
 });
 
 export default TeamsRouter;
