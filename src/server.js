@@ -19,7 +19,24 @@ const server = express();
 const port = process.env.PORT
 
 // console.log("DB CONNECTION STRING: ", process.env.MYDBCONNECTIONSTRING)
-mongoose.connect(process.env.MONGO_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })
+
+// mongoose.connect(process.env.MONGO_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })
+// const db = mongoose.connection;
+// db.on("error", (error) => console.log(error));
+
+mongoose.connect(process.env.MONGO_CONNECTION)
+
+mongoose.connection.on("connected", () => {
+    console.log("Mongo Connected!")
+
+    server.listen(port, () => {
+        console.table(listEndpoints(server))
+
+        console.log(`Server running on port ${port}`)
+    })
+})
+
+
 
 server.use(cors());
 server.use(express.json());
@@ -39,7 +56,7 @@ server.use(catchAllErrorHandler)
 
 console.table(listEndpoints(server))
 
-server.listen(port, () => console.log(" Server is running on port : ", port));
+//server.listen(port, () => console.log(" Server is running on port : ", port));
 
 server.on("error", (error) =>
     console.log(` Server is not running due to : ${error}`)
@@ -95,12 +112,5 @@ mongoose.connect(process.env.MONGO_CONNECTION, {
     useUnifiedTopology: true,
 });
 
-const db = mongoose.connection;
-db.on("error", (error) => console.log(error));
-db.once("open", () => console.log("Connected to MongoDB")).then(
-    server.listen(port, () => {
-        console.log("Running on port", port, "🎇");
-        console.timeEnd("Server startup");
-    })
-);
+
 */
